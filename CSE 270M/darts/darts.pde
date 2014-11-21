@@ -2,7 +2,8 @@ final float RAD = 57.2957795;
 final int R = 500;
 final int SMALL_R = 435;
 final int SMALLER = 2;
-final int TRIALS = 1;
+final int TRIALS = 100000;
+String results;
 
 Segment eleven, eight, sixteen, seven, nineteen, three, seventeen, two, fifteen, ten, fourteen, nine, twelve, five, twenty, one, eighteen, four, thirteen, six;
 Segment[] segments;
@@ -10,6 +11,7 @@ Segment[] segments;
 void setup() {
   size(1000, 1000); 
   background(150, 150, 150);
+  results = "";
 
   eleven = new Segment(11);
   eight = new Segment(8);
@@ -32,25 +34,108 @@ void setup() {
   thirteen = new Segment(13);
   six = new Segment(6);
 
-  drawBoard();
   Segment[] temp = {
     eleven, eight, sixteen, seven, nineteen, three, seventeen, two, fifteen, ten, fourteen, nine, twelve, five, twenty, one, eighteen, four, thirteen, six
   };
   segments = temp;
+  drawBoard();
+}
 
-  // Average for one hand
-  println("The average for three darts: " + monteCarloDarts(TRIALS, true));
-  //println("The probability of getting a bullseye: " + monteCarloBullseye(TRIALS, true));
+void draw() {
+  drawButtons();
+}
+
+void drawButtons() {
+  fill(255, 255, 255);
+  stroke(0, 0, 0);
+  strokeWeight(1);
+  rectMode(CORNER);
+
+  // Clear
+  rect(5, 5, 150, 20);
+
+  // Average for 1 dart
+  rect(5, 30, 150, 20);
+
+  // Average for 3 darts
+  rect(5, 55, 150, 20);
+
+  // Bullseye odds
+  rect(5, 80, 150, 20);
+
+  // Output
+  rect(width - 155, 5, 150, 20);
+
+  fill(0, 0, 0);
+  textSize(12);
+  textAlign(LEFT, TOP);
+
+  text("Clear", 10, 7);
+  text("Average for 1 dart", 10, 32);
+  text("Average for 3 darts", 10, 57);
+  text("Bullseye odds", 10, 82);
+  text("Result: ", width - 145, 7);
+  text(results, width - 102, 7);
+}
+
+void mousePressed() {
+  float x = mouseX;
+  float y = mouseY;
+
+  if (x >= 5 && x <= 155) {
+
+    // Clear
+    if (y >= 5 && y <= 25) {
+      drawBoard();
+      results = "";
+    }
+    // Average for 1 dart
+    else if (y >= 30 && y <= 50) {
+      results = "" + monteCarloDartsX(TRIALS, 1, true);
+      results += " points";
+    }
+    // Average for 3 darts
+    else if (y >= 55 && y <= 75) {
+      results = "" + monteCarloDartsX(TRIALS, 3, true);
+      results += " points";
+    }
+    // Bullseye odds
+    else if (y >= 80 && y <= 100) {
+      results = "" + monteCarloBullseye(TRIALS, true);
+      results += " odds";
+    }
+  }
 }
 
 float monteCarloDarts(int trials, boolean draw) {
   float average = 0;
   for (int i = 0; i < trials; i++) {
-    average += throwDarts(3, draw);
+    int score = 0;
+    int count = 0;
+    while (score != 501) {
+      Point dart = throwDart();
+      if (draw)
+        drawPoint(dart);
+      int addition = getScore(dart);
+      if ((score + addition) <= 501)
+        score += addition;
+      count++;
+    }
+    average += count;
   }
   average /= trials;
   return average;
 }
+
+float monteCarloDartsX(int trials, int darts, boolean draw) {
+  float average = 0;
+  for (int i = 0; i < trials; i++) {
+    average += throwDarts(darts, draw);
+  }
+  average /= trials;
+  return average;
+}
+
 
 float monteCarloBullseye(int trials, boolean draw) {
   float bullseyes = 0;
@@ -73,8 +158,10 @@ boolean bullseyeCheck(boolean draw) {
 
 void drawPoint(Point dart) {
   stroke(247, 130, 226);
-  strokeWeight(3);
+  strokeWeight(1);
   point(dart.x, dart.y);
+  stroke(0, 0, 0);
+  strokeWeight(1);
 }
 
 int throwDarts(int trials, boolean draw) {
@@ -133,6 +220,12 @@ int getScore(Point p) {
 }
 
 void drawBoard() {
+
+  for (Segment s : segments) {
+    s.index = 0;
+  }
+
+  fill(255, 255, 255);
   ellipse(500, 500, 1000, 1000);
 
   fill(0, 0, 0);

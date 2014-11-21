@@ -5,6 +5,7 @@ class Triangle {
   public Triangle(float xStart, float yStart, float xEnd, float yEnd, boolean draw) {
     if (draw) {
       strokeWeight(1);
+      stroke(255, 255, 255);
       line(xStart, yStart, width/2, height/2);
       line(xEnd, yEnd, width/2, height/2);
     }
