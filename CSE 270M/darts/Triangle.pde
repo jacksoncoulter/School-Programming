@@ -1,7 +1,9 @@
 class Triangle {
 
+  // Array containing the verticies of the triangle
   private Point[] v;
 
+  // Creates a triangle given two end points connected to the center of the window
   public Triangle(float xStart, float yStart, float xEnd, float yEnd, boolean draw) {
     if (draw) {
       strokeWeight(1);
@@ -15,6 +17,10 @@ class Triangle {
     v[2] = new Point(500, 500);
   }
 
+  // Checks if a point is inside the triangle
+  // Uses method found here: http://mathforum.org/library/drmath/view/54505.html
+  // If the cross product the three calculated cross products are all either negative
+  // or all positive then the point is within the trianlge
   public boolean contains(float x, float y) {
      
     Point p = new Point(x, y);
@@ -31,15 +37,10 @@ class Triangle {
     return false;
   }
   
+  // Computes the cross product of four points
   public float crossProduct(Point a, Point b, Point c, Point d) {
       return (b.x - a.x) * (d.y - c.y) - (d.x - c.x) * (b.y - a.y);
   }
   
-
-  public float area(float x1, float y1, float x2, float y2, float x3, float y3) {
-    float area = 0.0;
-    area = Math.abs((((x1 * y2) - (y1 * x2)) + ((x2 * y3) - (y2 * x3)) + ((x3 * y1) - y3 * x1)) / 2);
-    return area;
-  }
 }
 

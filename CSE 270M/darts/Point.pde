@@ -1,3 +1,4 @@
+// Simple point class with public x and y
 public class Point{
   
   public float x;

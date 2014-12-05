@@ -1,11 +1,12 @@
 final float RAD = 57.2957795;
-final int R = 500;
-final int SMALL_R = 435;
-final int SMALLER = 2;
-final int TRIALS = 100000;
-String results;
+final int R = 500; // Radius of the entire dart board
+final int SMALL_R = 435; // Radius of the smaller circle worth points
+final int TRIALS = 100000; // Number of trials to run
+String results; // The results of the trials
 
+// Segments for each scoring section
 Segment eleven, eight, sixteen, seven, nineteen, three, seventeen, two, fifteen, ten, fourteen, nine, twelve, five, twenty, one, eighteen, four, thirteen, six;
+// Array of all the segments
 Segment[] segments;
 
 void setup() {
@@ -13,6 +14,7 @@ void setup() {
   background(150, 150, 150);
   results = "";
 
+  // Setup segments assigning values
   eleven = new Segment(11);
   eight = new Segment(8);
   sixteen = new Segment(16);
@@ -33,11 +35,14 @@ void setup() {
   four = new Segment(4);
   thirteen = new Segment(13);
   six = new Segment(6);
-
+  
+  // Filling segments array with the segments
   Segment[] temp = {
     eleven, eight, sixteen, seven, nineteen, three, seventeen, two, fifteen, ten, fourteen, nine, twelve, five, twenty, one, eighteen, four, thirteen, six
   };
   segments = temp;
+  
+  // drawing the board
   drawBoard();
 }
 
@@ -45,6 +50,7 @@ void draw() {
   drawButtons();
 }
 
+// Draws the buttons for interaction
 void drawButtons() {
   fill(255, 255, 255);
   stroke(0, 0, 0);
@@ -70,6 +76,7 @@ void drawButtons() {
   textSize(12);
   textAlign(LEFT, TOP);
 
+  // Button labels
   text("Clear", 10, 7);
   text("Average for 1 dart", 10, 32);
   text("Average for 3 darts", 10, 57);
@@ -78,6 +85,7 @@ void drawButtons() {
   text(results, width - 102, 7);
 }
 
+// Handles button preses
 void mousePressed() {
   float x = mouseX;
   float y = mouseY;
@@ -107,6 +115,7 @@ void mousePressed() {
   }
 }
 
+// Gives the average number of darts to reach 501
 float monteCarloDarts(int trials, boolean draw) {
   float average = 0;
   for (int i = 0; i < trials; i++) {
@@ -127,6 +136,7 @@ float monteCarloDarts(int trials, boolean draw) {
   return average;
 }
 
+// Gives the average points for a given number of darts
 float monteCarloDartsX(int trials, int darts, boolean draw) {
   float average = 0;
   for (int i = 0; i < trials; i++) {
@@ -136,7 +146,7 @@ float monteCarloDartsX(int trials, int darts, boolean draw) {
   return average;
 }
 
-
+// Gives the odds of hitting the bullseye
 float monteCarloBullseye(int trials, boolean draw) {
   float bullseyes = 0;
   for (int i = 0; i < trials; i++) {
@@ -146,6 +156,7 @@ float monteCarloBullseye(int trials, boolean draw) {
   return bullseyes / trials;
 }
 
+// Throws a dart and checks if it got a bullseye
 boolean bullseyeCheck(boolean draw) {
   Point dart = throwDart();
   if (draw)
@@ -156,6 +167,7 @@ boolean bullseyeCheck(boolean draw) {
     return false;
 }
 
+// Draws a dart throw
 void drawPoint(Point dart) {
   stroke(247, 130, 226);
   strokeWeight(1);
@@ -164,6 +176,7 @@ void drawPoint(Point dart) {
   strokeWeight(1);
 }
 
+// Throws a given number of darts and returns the score
 int throwDarts(int trials, boolean draw) {
   int score = 0;
   Point dart;
@@ -177,6 +190,7 @@ int throwDarts(int trials, boolean draw) {
   return score;
 }
 
+// Returns a random point on the dart board
 Point throwDart() {
   float randX;
   float randY;
@@ -188,6 +202,7 @@ Point throwDart() {
   return new Point(randX, randY);
 }
 
+// Scores a dart throw
 int getScore(Point p) {
   int score = 0;
   float distance = dist(p.x, p.y, 500, 500);
@@ -219,23 +234,28 @@ int getScore(Point p) {
   return score;
 }
 
+// Draws the dart board
 void drawBoard() {
 
   for (Segment s : segments) {
     s.index = 0;
   }
 
+  // Outer sircle
   fill(255, 255, 255);
   ellipse(500, 500, 1000, 1000);
 
+  // Inner circle
   fill(0, 0, 0);
   ellipse(500, 500, 1000, 1000);
-
+   
+  // Double ring 
   fill(76, 0, 153);
   ellipse(500, 500, 754, 754);
   fill(24, 80, 9);
   ellipse(500, 500, 719, 719);
 
+  // Triple ring
   fill(255, 255, 0);
   ellipse(500, 500, 475, 475);
   fill(24, 80, 9);
@@ -438,6 +458,7 @@ void drawBoard() {
     text(text, xEnd, yEnd);
   }
 
+  // Inner and outer bullseye
   fill(0, 255, 0);
   ellipse(500, 500, 71, 71);
   fill(255, 0, 0);
